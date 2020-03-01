@@ -15,8 +15,9 @@ Hajime Kurita
 
 ### Japanese
 - https://ProgrammingLang.com/ja/
-
-
+- https://VpsHikaku.com/
+- https://RentalServerHikaku.com/
+- https://SenyouServerHikaku.com/
 
 # INSTALLATION
 To install this module type the following:

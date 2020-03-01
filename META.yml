@@ -1,10 +1,10 @@
 --- #YAML:1.0
 name:               BDB-Wrapper
-version:            0.42
+version:            0.52
 abstract:           The module to use BerkeleyDB.pm with good option easily
 author:
-    - Hajime Kurita / Admin of http://sakuhindb.com/ & http://minakoe.jp/
-license:            unknown
+    - Hajime Kurita
+license:            MIT
 distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0
@@ -13,6 +13,9 @@ build_requires:
 requires:
     BerkeleyDB:  0
     File::Spec:  0
+    Test:    0
+    Test::More: 0
+
 no_index:
     directory:
         - t

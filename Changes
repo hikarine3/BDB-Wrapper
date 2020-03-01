@@ -1,5 +1,8 @@
 Revision history for Perl extension BDB::Wrapper.
 
+0.52 Sun Mar/02/2020
+	- Enhanced only author's profile
+
 0.51 Sun Mar/02/2020
 	- added necessary modules and description of cds_lock
 
