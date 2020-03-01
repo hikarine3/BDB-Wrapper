@@ -25,7 +25,7 @@ $bdbs{$bdb}=1;
 unlink $bdb if -f $bdb;
 my $bdb_home='';
 $bdb_home=$bdbw->get_bdb_home($bdb);
-ok($bdb_home=~ m!^/tmp/bdb_home!);
+ok($bdb_home=~ m!^/tmp/bdbwrapper!);
 
 my $bdbh;
 my $sort_code_ref=sub {lc $_[1] cmp lc $_[0]};
@@ -75,13 +75,19 @@ undef $write_hash_ref;
 my $hash_ref=$bdbw->create_read_hash_ref({'bdb'=>$bdb2});
 ok($hash_ref->{'write'}==1);
 
-my $new_bdbw=new BDB::Wrapper({'ram'=>1});
-my $new_dbh;
-my $test_bdb='test3.bdb';
-$bdbs{$test_bdb}=1;
-ok($new_dbh=$new_bdbw->create_write_dbh($test_bdb));
-ok($new_dbh->db_put('name', $value)==0);
-$new_dbh->db_close();
+if(-d "/dev/shm") {
+	my $new_bdbw=new BDB::Wrapper({'ram'=>1});
+	my $new_dbh;
+	my $test_bdb='test3.bdb';
+	$bdbs{$test_bdb}=1;
+	ok($new_dbh=$new_bdbw->create_write_dbh($test_bdb));
+	ok($new_dbh->db_put('name', $value)==0);
+	$new_dbh->db_close();
+}
+else{
+	ok(1==1);
+	ok(1==1);
+}
 
 my $bdbw3;
 my $no_lock_bdb='no_lock.bdb';
@@ -114,7 +120,7 @@ ok($bdbh->db_close()==0);
 
 my $bdb_dir=File::Spec->rel2abs($bdb);
 $bdb_dir=~ s!\.bdb$!!;
-$bdb_dir='/tmp/bdb_home'.$bdb_dir;
+$bdb_dir='/tmp/bdbwrapper/bdb_home'.$bdb_dir;
 ok($bdbw->get_bdb_home($bdb) eq $bdb_dir);
 
 

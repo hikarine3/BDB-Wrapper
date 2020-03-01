@@ -9,7 +9,7 @@ use FileHandle;
 use Exporter;
 use AutoLoader qw(AUTOLOAD);
 
-our $VERSION = '0.50'; # This is sakuhindb original /www/ichiji
+our $VERSION = '0.51'; 
 our @ISA = qw(Exporter AutoLoader);
 our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
@@ -603,7 +603,7 @@ our @EXPORT = qw(
   Attention: If you use this module for the specified Berkeley DB file,
   please use this module for all access to the bdb.
   By it, you can control lock and strasaction of bdb files.
-  BDB_HOMEs are created under /www/ichiji/bdb_home in default option.
+  BDB_HOMEs are created under /tmp/bdbwrapper/bdb_home in default option.
 
   Japanese: http://sakuhindb.com/pj/6_B4C9CDFDBFCDA4B5A4F3/13/list.html
   English: http://en.sakuhindb.com/pe/Administrator/19/list.html
@@ -635,7 +635,7 @@ our @EXPORT = qw(
 
   sub init_vars(){
     my $self=shift;
-    $self->{'bdb'}='/www/ichiji/test.bdb';
+    $self->{'bdb'}='/tmp/test.bdb';
     $self->{'bdbw'}=new BDB::Wrapper;
   }
 
@@ -695,7 +695,7 @@ our @EXPORT = qw(
     my $self=shift;
     $self->{'bdbw'}=new BDB::Wrapper;
     # If you want to create bdb_home with transaction log under /home/txn_data/bdb_home/$BDBFILENAME/
-    my ($dbh, $env)=$self->{'bdbw'}->create_write_dbh({'bdb'=>'/www/ichiji/bdb_write.bdb', 'txn'=>1});
+    my ($dbh, $env)=$self->{'bdbw'}->create_write_dbh({'bdb'=>'/tmp/bdb_write.bdb', 'txn'=>1});
     my $txn = $env->txn_begin(undef, DB_TXN_NOWAIT);
   
     my $cnt=0;
@@ -711,7 +711,7 @@ our @EXPORT = qw(
     $txn->txn_commit();
     $env->txn_checkpoint(1,1,0);
     $dbh->db_close();
-    chmod 0666, '/www/ichiji/bdb_write.bdb';
+    chmod 0666, '/tmp/bdb_write.bdb';
     print "Content-type:text/html\n\n";
     print $cnt."\n";
   }
@@ -724,7 +724,7 @@ our @EXPORT = qw(
 
   Creates an object of BDB::Wrapper
   
-  If you set {'ram'=>1}, you can use /dev/shm/bdb_home for storing locking file for BDB instead of /www/ichiji/bdb_home/.
+  If you set {'ram'=>1}, you can use /dev/shm/bdb_home for storing locking file for BDB instead of /tmp/bdbwrapper/bdb_home/.
   1 is default value.
   
   If you set {'no_lock'=>1}, the control of concurrent access will not be used. So the lock files are also not created.
@@ -746,11 +746,11 @@ sub new(){
   my $self={};
   my $class=shift;
   my $op_ref=shift;
-  $self->{'lock_root'}='/www/ichiji';
+  $self->{'lock_root'}='/tmp/bdbwrapper';
   $self->{'no_lock'}=0;
   $self->{'Flags'}='';
   $self->{'wait'}= 22;
-  $self->{'default_txn_dir'}='/www/ichiji/txn_data';
+  $self->{'default_txn_dir'}='/tmp/bdbwrapper/txn_data';
   while(my ($key, $value)=each %{$op_ref}){
     if($key eq 'ram'){
       if($value){
@@ -1073,7 +1073,7 @@ sub create_write_dbh(){
           $op->{'dont_try'}=1;
           $dont_try=1;
           my $home_dir=$self->get_bdb_home({'bdb'=>$bdb, 'transaction'=>$transaction});
-          system('rm -rf '.$home_dir) if ($home_dir=~ m!^(?:/www/ichiji|/dev/shm)! && -d $home_dir);
+          system('rm -rf '.$home_dir) if ($home_dir=~ m!^(?:/tmp/bdbwrapper|/dev/shm)! && -d $home_dir);
           if(ref($op) eq 'HASH'){
             $op->{'dont_try'}=1;
             return $self->create_write_dbh($op);
@@ -1138,7 +1138,7 @@ sub create_write_dbh(){
 
   If you set reverse_cmp 1, you can use sub {$_[1] cmp $_[0]} for sort_code_ref.
 
-  If you set transaction 1, you will user /www/ichiji/txn_data for the storage of transaction.
+  If you set transaction 1, you will use /tmp/bdbwrapper/txn_data for the storage of transaction.
 =cut
 
 sub create_read_dbh(){
@@ -1384,7 +1384,7 @@ sub create_write_hash_ref(){
         $op->{'dont_try'}=1;
         $dont_try=1;
         my $home_dir=$self->get_bdb_home({'bdb'=>$bdb, 'transaction'=>$transaction});
-        system('rm -rf '.$home_dir) if ($home_dir=~ m!^(?:/www/ichiji|/dev/shm)!);
+        system('rm -rf '.$home_dir) if ($home_dir=~ m!^(?:/tmp/bdbwrapper|/dev/shm)!);
         if(ref($op) eq 'HASH'){
           return $self->create_write_hash_ref($bdb, $op);
         }
@@ -1510,7 +1510,7 @@ sub create_read_hash_ref(){
         $op->{'dont_try'}=1;
         $dont_try=1;
         my $home_dir=$self->get_bdb_home({'bdb'=>$bdb, 'transaction'=>$transaction});
-        system('rm -rf '.$home_dir) if($home_dir=~ m!^(?:/www/ichiji|/dev/shm)!);
+        system('rm -rf '.$home_dir) if($home_dir=~ m!^(?:/tmp/bdbwrapper|/dev/shm)!);
         if(ref($op) eq 'HASH'){
           return $self->create_read_hash_ref($bdb, $op);
         }
@@ -1682,7 +1682,7 @@ sub clear_bdb_home(){
 
 =head2 record_error
 
-  This will record error message to /www/ichiji/bdb_error.log if you don\'t specify error_log_file
+  This will record error message to /tmp/bdbwrapper/bdb_error.log if you don\'t specify error_log_file
 
   record_error({
     'msg'=>$error_message,
@@ -1713,7 +1713,7 @@ sub record_error(){
       $error_log_file=$self->{'error_log_file'};
     }
     else{
-      $error_log_file='/www/ichiji/bdb_error.log';
+      $error_log_file='/tmp/bdbwrapper/bdb_error.log';
     }
   }
   if(my $fh=new FileHandle('>> '.$error_log_file)){
