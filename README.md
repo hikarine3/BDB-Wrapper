@@ -1,9 +1,22 @@
 # CPAN
 http://search.cpan.org/~hikarine/BDB-Wrapper/
 
-# Used at
-https://sakuhindb.com/
-http://minakoe.jp/
+# Author
+Hajime Kurita
+
+## Technical web services by the author
+### English
+- https://ProgrammingLang.com/en/
+- https://VpsRanking.com/en/
+
+### Chinise
+- https://ProgrammingLang.com/zh/
+- https://VpsRanking.com/zh/
+
+### Japanese
+- https://ProgrammingLang.com/ja/
+
+
 
 # INSTALLATION
 To install this module type the following:
