@@ -1,5 +1,5 @@
 # CPAN
-http://search.cpan.org/~hikarine/BDB-Wrapper/
+https://metacpan.org/pod/BDB::Wrapper
 
 # Author
 Hajime Kurita

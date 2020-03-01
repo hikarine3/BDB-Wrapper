@@ -1,5 +1,8 @@
 Revision history for Perl extension BDB::Wrapper.
 
+0.53 Sun Mar/02/2020
+	- Modified cpan url's location
+
 0.52 Sun Mar/02/2020
 	- Enhanced only author's profile
 
