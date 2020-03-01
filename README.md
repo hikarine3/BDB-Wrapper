@@ -103,7 +103,7 @@ at your option, any later version of Perl 5 you may have available.
     if(my $dbh=$self->{'bdbw'}->create_read_dbh($self->{'bdb'})){
       my $value;
       if($dbh->db_get('name', $value)==0){
-        print 'Name='.$name.' value='.$value."\n";
+        print 'Name=name value='.$value."\n";
       }
       $dbh->db_close();
     }
@@ -133,7 +133,7 @@ at your option, any later version of Perl 5 you may have available.
     my $txn = $env->txn_begin(undef, DB_TXN_NOWAIT);
   
     my $cnt=0;
-    for($i=0;$i<1000;$i++){
+    for(my $i=0;$i<1000;$i++){
       $dbh->db_put($i, $i*rand());
       $cnt=$i;
       if($cnt && $cnt%100==0){
@@ -155,7 +155,7 @@ at your option, any later version of Perl 5 you may have available.
 ## new
   Creates an object of BDB::Wrapper
   
-  If you set {'ram'=>1}, you can use /dev/shm/bdb_home for storing locking file for BDB instead of /tmp/bdb_home/.
+  If you set {'ram'=>1}, you can use /dev/shm/bdb_home for storing locking file for BDB instead of /tmp/bdbwrapper/bdb_home/.
   1 is default value.
   
   If you set {'no_lock'=>1}, the control of concurrent access will not be used. So the lock files are also not created.
