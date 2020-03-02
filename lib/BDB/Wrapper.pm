@@ -9,7 +9,7 @@ use FileHandle;
 use Exporter;
 use AutoLoader qw(AUTOLOAD);
 
-our $VERSION = '0.53'; 
+our $VERSION = '0.54'; 
 our @ISA = qw(Exporter AutoLoader);
 our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
@@ -694,7 +694,6 @@ our @EXPORT = qw(
   sub run(){
     my $self=shift;
     $self->{'bdbw'}=new BDB::Wrapper;
-    # If you want to create bdb_home with transaction log under /home/txn_data/bdb_home/$BDBFILENAME/
     my ($dbh, $env)=$self->{'bdbw'}->create_write_dbh({'bdb'=>'/tmp/bdb_write.bdb', 'txn'=>1});
     my $txn = $env->txn_begin(undef, DB_TXN_NOWAIT);
   
@@ -750,7 +749,7 @@ sub new(){
   $self->{'no_lock'}=0;
   $self->{'Flags'}='';
   $self->{'wait'}= 22;
-  $self->{'default_txn_dir'}='/tmp/bdbwrapper/txn_data';
+  $self->{'default_txn_dir'}=$self->{'lock_root'}.'/txn_data';
   while(my ($key, $value)=each %{$op_ref}){
     if($key eq 'ram'){
       if($value){

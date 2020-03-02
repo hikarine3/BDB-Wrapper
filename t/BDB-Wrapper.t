@@ -144,6 +144,7 @@ if(-d $bdbw4->get_bdb_home($no_env_bdb)){
 	if($path=~ m!^/tmp!){
 		system('rm -rf '.$path);
 	}
+	unlink $no_env_bdb;
 }
 my $no_env_bdbh=$bdbw4->create_write_dbh({'bdb'=>$no_env_bdb, 'no_env'=>1});
 ok($no_env_bdbh->db_put(1,2)==0);
@@ -182,6 +183,9 @@ foreach my $bdb (keys %bdbs){
 	unlink $bdb;
 }
 
+######
+# From here transaction
+my $rxn_bdbs = { };
 my $transaction_root_dir='/tmp/txn';
 my $txn1;
 my $trbdbw1=new BDB::Wrapper;
@@ -205,3 +209,8 @@ ok($trbdb_home=~ m!^$transaction_root_dir!);
 ok(-d $trbdb_home);
 $trbdbw1->clear_bdb_home({'bdb'=>$trbdb1, 'transaction'=>$transaction_root_dir});
 ok(!(-d $trbdb_home));
+
+unlink $trbdb1;
+if($trbdb_hom=~ m!^(?:/tmp/|/dev/shm)!){
+	system('rm -rf '.$trbdb_hom);
+}

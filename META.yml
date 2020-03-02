@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               BDB-Wrapper
-version:            0.53
+version:            0.54
 abstract:           The module to use BerkeleyDB.pm with good option easily
 author:
     - Hajime Kurita
